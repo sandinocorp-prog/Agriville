@@ -119,7 +119,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 <body>
 
 <div class="topbar">
-  <div class="logo">AGRIVILLE <span>/ COSECHA</span></div>
+  <div class="logo">AGRIVILLE <span>/ COSECHA 26-27</span></div>
   <div class="top-r">
     <div class="sync-wrap" onclick="manualSync()" title="Sincronizar">
       <div class="sync-dot" id="sdot"></div>
@@ -317,23 +317,30 @@ function ok(d){
 }`;
 
 // ── ROW MAP ────────────────────────────────────────────────────────────────
+// ACTIVE rows a helper can register: Glass 2026-2027 + Poly 2026
+const ACTIVE_SEASON='2026-2027';
 const ROWS={
-  2157:{v:'LADY ELLIOT/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2163:{v:'DRTH 5066/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2165:{v:'DRTH 5060/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2167:{v:'DRTH 5069/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2169:{v:'DRTH 5071/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2171:{v:'DRTH 5072/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2173:{v:'DRTH 5075/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2179:{v:'23K954257/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2187:{v:'23K954227/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2189:{v:'MEGADENA/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2195:{v:'FERGUSON/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2199:{v:'MACAPULE/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
-  2344:{v:'LADY ELLIOT/141',ph:'Phase 2',c:'#4dcf7a'},
-  6178:{v:'AVALENTINO/ARTERUS',ph:'Phase 4',c:'#d4b84a'},
-  6207:{v:'DUNK/ARTERUS',ph:'Phase 4',c:'#d4b84a'},
-  6327:{v:'AVALENTINO/KAISER',ph:'Phase 5',c:'#d4874a'},
+  // GLASS 2026-2027 — Phase 1 (planted Aug 31 2026)
+  2176:{v:'LADY ELLIOT/KAISER',ph:'Phase 1',c:'#5ab8e0'},
+  2206:{v:'LADY ELLIOT/141',ph:'Phase 1',c:'#5ab8e0'},
+  2166:{v:'LADY ELLIOT/FERVOUR',ph:'Phase 1',c:'#5ab8e0'},
+  2156:{v:'MEGADENA/KAISER',ph:'Phase 1',c:'#5ab8e0'},
+  2146:{v:'MACAPULE/KAISER',ph:'Phase 1',c:'#5ab8e0'},
+  // Phase 2 (planted Aug 25 2026)
+  2386:{v:'RIBOSKI/KAISER',ph:'Phase 2',c:'#4dcf7a'},
+  2454:{v:'RIBOSKI/141',ph:'Phase 2',c:'#4dcf7a'},
+  2344:{v:'RIBOSKI/FERVOUR',ph:'Phase 2',c:'#4dcf7a'},
+  2354:{v:'MEGADENA/KAISER',ph:'Phase 2',c:'#4dcf7a'},
+  2360:{v:'24K957588/KAISER',ph:'Phase 2',c:'#4dcf7a'},
+  2362:{v:'DRTH 5076/KAISER',ph:'Phase 2',c:'#4dcf7a'},
+  2364:{v:'E15B.43805/KAISER',ph:'Phase 2',c:'#4dcf7a'},
+  // Phase 4 (planted Sep 7 2026)
+  6208:{v:'AVALENTINO REI/KAISER',ph:'Phase 4',c:'#d4b84a'},
+  6190:{v:'CLIONA/KAISER',ph:'Phase 4',c:'#d4b84a'},
+  6178:{v:'SAVIRA/KAISER',ph:'Phase 4',c:'#d4b84a'},
+  // Phase 5 (planted Sep 5 2026)
+  6320:{v:'AVALENTINO REI/KAISER',ph:'Phase 5',c:'#d4874a'},
+  // POLY 2026 crop (planted Feb 2026) — still active
   5043:{v:'RIBOSKI/KAISER',ph:'Poly North',c:'#9b7de8'},
   5044:{v:'MACAPULE/KAISER',ph:'Poly North',c:'#9b7de8'},
   5122:{v:'DRTH 5069/KAISER',ph:'Poly North',c:'#9b7de8'},
@@ -373,6 +380,27 @@ const ROWS={
   5451:{v:'XOLANY/KAISER',ph:'Poly South',c:'#e87d7d'},
   5523:{v:'HTT1652097/KAISER',ph:'Poly South',c:'#e87d7d'},
   5525:{v:'XENYA/KAISER',ph:'Poly South',c:'#e87d7d'},
+};
+
+// PREVIOUS season (2025-2026 Glass) — kept for reference only, not registrable.
+// Rows 2344 and 6178 were reused: the active map above wins.
+const ROWS_PREV={
+  2157:{v:'LADY ELLIOT/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2163:{v:'DRTH 5066/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2165:{v:'DRTH 5060/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2167:{v:'DRTH 5069/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2169:{v:'DRTH 5071/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2171:{v:'DRTH 5072/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2173:{v:'DRTH 5075/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2179:{v:'23K954257/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2187:{v:'23K954227/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2189:{v:'MEGADENA/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2195:{v:'FERGUSON/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2199:{v:'MACAPULE/ARTERUS',ph:'Phase 1',c:'#5ab8e0'},
+  2344:{v:'LADY ELLIOT/141',ph:'Phase 2',c:'#4dcf7a'},
+  6178:{v:'AVALENTINO/ARTERUS',ph:'Phase 4',c:'#d4b84a'},
+  6207:{v:'DUNK/ARTERUS',ph:'Phase 4',c:'#d4b84a'},
+  6327:{v:'AVALENTINO/KAISER',ph:'Phase 5',c:'#d4874a'},
 };
 
 // ── UTILS ──────────────────────────────────────────────────────────────────
@@ -427,7 +455,8 @@ function onRow(val){
     document.getElementById('vtext').innerHTML=`<div class="vname">${info.v}</div><div class="vmeta">${info.ph} · Row ${r}</div>`;
     document.getElementById('btn-reg').disabled=false;
   }else{
-    curRow=null;inp.className='row-inp bad';hint.style.color='var(--danger)';hint.textContent='✗ Row '+r+' no registrado';
+    curRow=null;inp.className='row-inp bad';hint.style.color='var(--danger)';
+    hint.textContent=ROWS_PREV[r]?('✗ Row '+r+' era de la season 2025-2026 ('+ROWS_PREV[r].v+') — ya no está activo'):('✗ Row '+r+' no registrado');
     resetVC();document.getElementById('btn-reg').disabled=true;
   }
 }
